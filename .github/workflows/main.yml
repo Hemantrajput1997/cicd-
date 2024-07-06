@@ -17,11 +17,11 @@ jobs:
       uses: webfactory/ssh-agent@v0.5.3
       with:
         ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
-        # You'll need to add the corresponding public key to your AWS server's authorized_keys file
+        # Ensure the corresponding public key is added to your AWS server's authorized_keys file
 
     - name: Deploy to AWS
       run: |
-        ssh -o StrictHostKeyChecking=no -i $HOME/.ssh/ubuntu ${{ secrets.HOST_DNS }} "
+        ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.HOST_DNS }} "
         cd /var/www/html/cicd
         sudo git add .
         sudo git commit -m 'servercommit'
