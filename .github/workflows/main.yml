@@ -2,28 +2,27 @@ name: Deploy to AWS
 
 on:
   push:
-	branches:
-  	-main  # Change this to your main branch name
+    branches:
+      - main  # Change this to your main branch name
 
 jobs:
   deploy:
-	runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-	steps:
-	- name: Checkout code
-  	uses: actions/checkout@v2
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-	- name: Set up SSH key
-  	uses: webfactory/ssh-agent@v0.5.3
-  	with:
-    	host: ${{ secrets.HOST_DNS }}
-    	ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
-    	# You'll need to add the corresponding public key to your AWS server's authorized_keys files
+    - name: Set up SSH key
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+        # You'll need to add the corresponding public key to your AWS server's authorized_keys file
 
-	- name: Deploy to AWS
-  	run: |
-    	ssh -o StrictHostKeyChecking=no -i $HOME/.ssh/ ubuntu@3.141.15.46 "
-    	cd /var/www/html/cicd
-    	sudo git add .
-    	sudo git commit -m "servercommit"
-    	sudo git pull origin main"
+    - name: Deploy to AWS
+      run: |
+        ssh -o StrictHostKeyChecking=no -i $HOME/.ssh/ubuntu ${{ secrets.HOST_DNS }} "
+        cd /var/www/html/cicd
+        sudo git add .
+        sudo git commit -m 'servercommit'
+        sudo git pull origin main"
